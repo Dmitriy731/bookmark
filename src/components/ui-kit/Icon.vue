@@ -7,19 +7,12 @@ const props = defineProps<{
   color?: string;
 }>();
 
-// Импортируем все иконки из папки
-// ⚠️ путь должен совпадать с тем, где реально лежат файлы
 const icons = import.meta.glob('../../icons/*.vue');
 
-// Находим нужную иконку или отдаём fallback
-const IconComponent = defineAsyncComponent(() => {
-  const path = `../../icons/${props.name}.vue`;
-  if (icons[path]) {
-    return icons[path]();
-  }
-});
+const IconComponent = defineAsyncComponent(
+  icons[`../../icons/${props.name}.vue`] as () => Promise<any>,
+);
 
-// Размер и цвет
 const style = computed(() => ({
   width: typeof props.size === 'number' ? `${props.size}px` : props.size || '1em',
   height: typeof props.size === 'number' ? `${props.size}px` : props.size || '1em',
