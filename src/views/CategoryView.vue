@@ -6,6 +6,7 @@ import type { Categories } from '@/interfaces/categories.interfaces';
 import { useBookmarkStore } from '@/stores/bookmarks.store';
 import CategoryHead from '@/components/CategoryHead.vue';
 import CategoryBody from '@/components/CategoryBody.vue';
+import BookmarkSort from '@/components/BookmarkSort.vue';
 
 const route = useRoute();
 const categoryStore = useCategoriesStore();
@@ -19,7 +20,15 @@ async function loadData(alias: string) {
   const categories = categoryStore.getCategoryByAlias(alias);
   if (categories) {
     category.value = categories;
-    bookmarkStore.fetchBookmarks(categories.id);
+    bookmarkStore.fetchBookmarks(categories.id, bookmarkStore.activeSort);
+  }
+}
+
+function updateSortOption(option: string) {
+  bookmarkStore.activeSort = option;
+
+  if (category.value) {
+    bookmarkStore.fetchBookmarks(category.value.id, bookmarkStore.activeSort);
   }
 }
 
@@ -40,10 +49,15 @@ watch(
 <template>
   <div class="category">
     <CategoryHead v-if="category" :category="category" />
+    <BookmarkSort
+      v-if="category"
+      :option="bookmarkStore.activeSort"
+      @update:option="updateSortOption"
+    />
     <CategoryBody
       v-if="bookmarkStore.bookmarks"
       :bookmarks="bookmarkStore.bookmarks"
-      :categoryId="category?.id"
+      :categoryId="category?.id ? category.id : 0"
     />
   </div>
 </template>

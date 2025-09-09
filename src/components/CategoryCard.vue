@@ -2,26 +2,37 @@
 import Button from '@/components/ui-kit/Button.vue';
 import Icon from '@/components/ui-kit/Icon.vue';
 import type { Bookmarks } from '@/interfaces/bookmarks.interfaces';
-import { useBookmarkStore } from '@/stores/bookmarks.store';
+import { ref } from 'vue';
+import PopupConfirm from './PopupConfirm.vue';
 
-const { bookmark } = defineProps<{ bookmark: Bookmarks }>();
-const bookmarkStore = useBookmarkStore();
+const { id, title, image, url } = defineProps<Bookmarks>();
+const emit = defineEmits(['delete']);
+const isOpen = ref<boolean>(false);
 
 function deleteBookmark() {
-  bookmarkStore.deleteBookmark(bookmark.id);
+  emit('delete', id);
 }
 
 function copyLink() {
-  navigator.clipboard.writeText(bookmark.url);
+  navigator.clipboard.writeText(url);
 }
 </script>
 
 <template>
   <div class="category-card">
-    <img class="category-card__image" :src="bookmark.image" :alt="bookmark.title" />
-    <div class="category-card__title">{{ bookmark.title }}</div>
+    <img
+      class="category-card__image"
+      width="274"
+      height="162"
+      :src="
+        image ||
+        'https://media.istockphoto.com/id/1325705756/vector/missing-red-ink-stamp.jpg?s=612x612&w=0&k=20&c=Tmbug70TVXVP2tmgV-xcbWGsLWqTcTLJYtGBtrYLYkc='
+      "
+      :alt="title"
+    />
+    <div class="category-card__title">{{ title }}</div>
     <div class="category-card__btns">
-      <Button class="button--category-card" @click="deleteBookmark">
+      <Button class="button--category-card" @click="() => (isOpen = !isOpen)">
         <Icon name="CategoryCart" size="24" />
       </Button>
       <Button class="button--category-card" @click="copyLink">
@@ -29,6 +40,12 @@ function copyLink() {
       </Button>
     </div>
   </div>
+  <PopupConfirm
+    text="Вы уверены, что хотите удалить закладку?"
+    :is-open="isOpen"
+    @ok="deleteBookmark"
+    @cencel="isOpen = false"
+  />
 </template>
 
 <style scoped lang="scss">
@@ -44,6 +61,9 @@ function copyLink() {
 
   &__image {
     border-radius: 20px;
+    aspect-ratio: 274/162;
+    object-fit: cover;
+    background-color: var(--color-bg);
   }
 
   &__title {

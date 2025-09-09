@@ -5,9 +5,11 @@ export const API_ROUTES = {
   profile: `/profile`,
   categories: `/categories`,
   categoriesId: (id: number) => `/categories/${id}`,
-  bookmarks: (id: number) => `/categories/${id}/bookmarks`,
-  createBookmark: `/bookmarks`,
-  bookmarksId: (id: number) => `/bookmarks/${id}`,
+  bookmarks: {
+    get: (id: number) => `/categories/${id}/bookmarks`,
+    create: `/bookmarks`,
+    delete: (id: number) => `/bookmarks/${id}`,
+  },
   auth: {
     login: `/auth/login`,
     profile: `/auth/profile`,

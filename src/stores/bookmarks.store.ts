@@ -5,28 +5,33 @@ import { ref } from 'vue';
 
 export const useBookmarkStore = defineStore('bookmarks', () => {
   const bookmarks = ref<Bookmarks[]>([]);
+  const activeSort = ref<string>('date');
 
-  async function fetchBookmarks(categoryId: number) {
-    const { data } = await client().get<Bookmarks[]>(API_ROUTES.bookmarks(categoryId));
-    bookmarks.value = data;
-    console.log(bookmarks.value);
-  }
-
-  async function createBookmark(categoryId: number, url: string) {
-    const { data } = await client().post<Bookmarks>(API_ROUTES.createBookmark, {
-      category_id: categoryId,
-      url: url,
+  async function fetchBookmarks(categoryId: number, sort: string) {
+    const { data } = await client().get<Bookmarks[]>(API_ROUTES.bookmarks.get(categoryId), {
+      params: {
+        sort,
+      },
     });
-    bookmarks.value.push(data);
+    bookmarks.value = data;
   }
 
-  async function deleteBookmark(id: number) {
-    await client().delete<Bookmarks>(API_ROUTES.bookmarksId(id));
-    fetchBookmarks(id);
+  async function createBookmark(category_id: number, url: string) {
+    await client().post<Bookmarks>(API_ROUTES.bookmarks.create, {
+      category_id,
+      url,
+    });
+    fetchBookmarks(category_id, activeSort.value);
+  }
+
+  async function deleteBookmark(id: number, categoryId: number) {
+    await client().delete<Bookmarks>(API_ROUTES.bookmarks.delete(id));
+    fetchBookmarks(categoryId, activeSort.value);
   }
 
   return {
     bookmarks,
+    activeSort,
     fetchBookmarks,
     createBookmark,
     deleteBookmark,

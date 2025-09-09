@@ -20,6 +20,7 @@ export const router = createRouter({
       children: [
         {
           path: '',
+          name: 'index',
           component: () => import('./views/IndexView.vue'),
         },
         {

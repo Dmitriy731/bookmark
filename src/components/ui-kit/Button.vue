@@ -41,7 +41,7 @@ function buttonClick(e: Event) {
   </button>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 .button {
   display: flex;
   align-items: center;
@@ -87,11 +87,13 @@ function buttonClick(e: Event) {
     justify-content: center;
     width: 32px;
     height: 32px;
+    flex-shrink: 0;
     border-radius: 50%;
     background-color: var(--color-fg);
     color: var(--color-bg);
     font-size: 14px;
     line-height: 32px;
+    transition: background-color 0.3s;
   }
 
   &--add-category {
@@ -107,6 +109,7 @@ function buttonClick(e: Event) {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      z-index: 1;
     }
 
     &::after {
@@ -126,6 +129,24 @@ function buttonClick(e: Event) {
     background-color: var(--color-fg);
     color: var(--color-bg);
     border: 3px solid var(--color-bg);
+  }
+
+  &--sort {
+    padding: 4px 0px;
+    font-size: 16px;
+    line-height: 20px;
+    color: var(--color-fg);
+    border-bottom: 2px solid transparent;
+    transition:
+      border-color 0.3s,
+      opacity 0.3s;
+
+    opacity: 0.4;
+
+    &.active {
+      opacity: 1;
+      border-color: var(--color-fg);
+    }
   }
 }
 </style>

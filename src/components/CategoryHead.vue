@@ -34,7 +34,7 @@ function deleteCategory() {
   <div class="category-head">
     <h1 class="category-head__title" v-if="!isEdited">{{ category?.name }}</h1>
     <div v-else class="category-head__wrap-input">
-      <InputString v-model="newCategoryName" />
+      <InputString v-model="newCategoryName" is-focused />
       <Button class="button--round" @click="updateCategory">
         <Icon name="Check" size="16" />
       </Button>
@@ -55,6 +55,7 @@ function deleteCategory() {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 40px;
 
   &__wrap-input {
     display: flex;

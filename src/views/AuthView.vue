@@ -13,7 +13,7 @@ watch(
   () => authStore.getToken,
   () => {
     if (authStore.getToken) {
-      router.push({ name: 'main' });
+      router.push({ name: 'index' });
     }
   },
 );
